@@ -1,0 +1,16 @@
+{
+  "name": "sn-trade-serv",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./lib/index",
+  "devDependencies": {
+    "eslint": "^6.3.0"
+  },
+  "dependencies": {
+    "ioredis": "^4.11.2"
+  },
+  "scripts": {
+    "dev": "npx supervisor scripts/start.js",
+    "start": "node scripts/start.js"
+  }
+}
