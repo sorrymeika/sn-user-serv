@@ -11,16 +11,17 @@ FLUSH PRIVILEGES;
 -- 查看用户
 SELECT User, Host FROM mysql.user;
 
--- 创建库存数据库
-create database if not exists sn_user;
--- 分配权限
-grant ALL on sn_user.* to 'dev'@'localhost';
+-- 展示所有数据库
+show databases;
 
 -- 查看用户权限
 show grants for 'dev'@'localhost';
 
--- 展示所有数据库
-show databases;
+
+-- 创建库存数据库
+create database if not exists sn_user;
+-- 分配权限
+grant ALL on sn_user.* to 'dev'@'localhost';
 
 -- 使用数据库
 use sn_user;

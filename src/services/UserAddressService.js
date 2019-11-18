@@ -15,7 +15,7 @@ class UserAddressService extends Service {
             tag,
             latitude,
             longitude 
-        from userAddress where accountId=@p0 order by isDefaultAddress desc limit 1`, [accountId]);
+        from userAddress where accountId=@p0 order by isDefaultAddress desc`, [accountId]);
 
         if (rows && rows.length) {
             const areaListRes = await this.ctx.baseRPC.invoke('address.listAreaInfoByDistrictCodes', [rows.map(row => row.districtCode)]);
