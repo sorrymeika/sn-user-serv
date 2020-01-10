@@ -2,7 +2,7 @@ const { Service } = require('sonorpc');
 
 class UserAddressService extends Service {
     async listUserAddress(accountId) {
-        const rows = await this.ctx.mysql.query(`select
+        const rows = await this.app.mysql.query(`select
             id,
             isDefaultAddress,
             receiver,
@@ -18,7 +18,7 @@ class UserAddressService extends Service {
         from userAddress where accountId=@p0 order by isDefaultAddress desc`, [accountId]);
 
         if (rows && rows.length) {
-            const areaListRes = await this.ctx.baseRPC.invoke('address.listAreaInfoByDistrictCodes', [rows.map(row => row.districtCode)]);
+            const areaListRes = await this.app.baseRPC.invoke('address.listAreaInfoByDistrictCodes', [rows.map(row => row.districtCode)]);
             if (!areaListRes.success) {
                 return areaListRes;
             }
@@ -35,7 +35,7 @@ class UserAddressService extends Service {
     }
 
     async getUserAddressById(addressId, accountId) {
-        const rows = await this.ctx.mysql.query(`select
+        const rows = await this.app.mysql.query(`select
             id,
             isDefaultAddress,
             receiver,
@@ -52,7 +52,7 @@ class UserAddressService extends Service {
 
         if (rows && rows.length) {
             const data = rows[0];
-            const areaListRes = await this.ctx.baseRPC.invoke('address.getAreaInfoByDistrictCode', [data.districtCode]);
+            const areaListRes = await this.app.baseRPC.invoke('address.getAreaInfoByDistrictCode', [data.districtCode]);
             if (!areaListRes.success) {
                 return areaListRes;
             }
@@ -69,7 +69,7 @@ class UserAddressService extends Service {
     }
 
     async getDefaultAddress(accountId) {
-        const rows = await this.ctx.mysql.query(`select
+        const rows = await this.app.mysql.query(`select
             id,
             isDefaultAddress,
             receiver,
@@ -86,7 +86,7 @@ class UserAddressService extends Service {
 
         if (rows && rows.length) {
             const data = rows[0];
-            const areaListRes = await this.ctx.baseRPC.invoke('address.getAreaInfoByDistrictCode', [data.districtCode]);
+            const areaListRes = await this.app.baseRPC.invoke('address.getAreaInfoByDistrictCode', [data.districtCode]);
             if (!areaListRes.success) {
                 return areaListRes;
             }
@@ -117,12 +117,12 @@ class UserAddressService extends Service {
         longitude
     }) {
         if (isDefaultAddress) {
-            await this.ctx.mysql.update('userAddress', {
+            await this.app.mysql.update('userAddress', {
                 isDefaultAddress: 0
             }, { accountId });
         }
 
-        const res = await this.ctx.mysql.insert('userAddress', {
+        const res = await this.app.mysql.insert('userAddress', {
             accountId,
             isDefaultAddress: isDefaultAddress ? 1 : 0,
             receiver,
@@ -155,12 +155,12 @@ class UserAddressService extends Service {
         longitude
     }) {
         if (isDefaultAddress) {
-            await this.ctx.mysql.update('userAddress', {
+            await this.app.mysql.update('userAddress', {
                 isDefaultAddress: 0
             }, { accountId });
         }
 
-        const res = await this.ctx.mysql.update('userAddress', {
+        const res = await this.app.mysql.update('userAddress', {
             isDefaultAddress: isDefaultAddress ? 1 : 0,
             receiver,
             phoneCountryCode,

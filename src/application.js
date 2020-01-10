@@ -2,7 +2,7 @@ const { createProvider, registerConsumer } = require('sonorpc');
 const MySQL = require('sonorpc-mysql');
 const Redis = require('ioredis');
 
-const config = require('../config');
+const config = require('./config');
 
 const baseRPC = registerConsumer({
     // 服务提供者名称
@@ -12,24 +12,26 @@ const baseRPC = registerConsumer({
     }
 });
 
-const ctx = {
+const application = {
     mysql: new MySQL(config.mysql),
     redis: new Redis(config.redis),
     baseRPC
 };
 
-module.exports = function start() {
+exports.start = function start() {
     return createProvider({
         name: 'user',
-        ctx,
         port: 3012,
         registry: {
             port: 3006
         },
-        serviceClasses: [
-            require('./UserService'),
-            require('./UserAddressService'),
-            require('./UserInvoiceService'),
+        extentions: {
+            application
+        },
+        services: [
+            require('./services/UserService'),
+            require('./services/UserAddressService'),
+            require('./services/UserInvoiceService'),
         ]
     })
         .start();

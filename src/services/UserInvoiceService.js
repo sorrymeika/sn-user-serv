@@ -2,7 +2,7 @@ const { Service } = require('sonorpc');
 
 class UserInvoiceService extends Service {
     async listInvoice(accountId) {
-        const rows = await this.ctx.mysql.query(`select
+        const rows = await this.app.mysql.query(`select
             id,
             isDefault,
             type,
@@ -16,7 +16,7 @@ class UserInvoiceService extends Service {
     }
 
     async getDefaultInvoice(accountId) {
-        const rows = await this.ctx.mysql.query(`select
+        const rows = await this.app.mysql.query(`select
             id,
             isDefault,
             type,
@@ -38,7 +38,7 @@ class UserInvoiceService extends Service {
         taxCode,
         phoneNo
     }) {
-        const rows = await this.ctx.mysql.query('select id from userInvoice where title=@p0 and accountId=@p1', [title, accountId]);
+        const rows = await this.app.mysql.query('select id from userInvoice where title=@p0 and accountId=@p1', [title, accountId]);
         if (rows && rows.length) {
             return await this.updateInvoice({
                 id: rows[0].id,
@@ -52,12 +52,12 @@ class UserInvoiceService extends Service {
             });
         } else {
             if (isDefault) {
-                await this.ctx.mysql.update('userInvoice', {
+                await this.app.mysql.update('userInvoice', {
                     isDefault: 0
                 }, { accountId });
             }
 
-            const res = await this.ctx.mysql.insert('userInvoice', {
+            const res = await this.app.mysql.insert('userInvoice', {
                 accountId,
                 isDefault: isDefault ? 1 : 0,
                 type,
@@ -82,12 +82,12 @@ class UserInvoiceService extends Service {
         phoneNo
     }) {
         if (isDefault) {
-            await this.ctx.mysql.update('userInvoice', {
+            await this.app.mysql.update('userInvoice', {
                 isDefault: 0
             }, { accountId });
         }
 
-        const res = await this.ctx.mysql.update('userInvoice', {
+        const res = await this.app.mysql.update('userInvoice', {
             isDefault: isDefault ? 1 : 0,
             type,
             titleType,
